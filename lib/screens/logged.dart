@@ -10,6 +10,8 @@ class Logged extends StatefulWidget {
 class _LoggedState extends State<Logged> {
   @override
   Widget build(BuildContext context) {
-    return Column();
+    return SingleChildScrollView(
+      
+    );
   }
 }

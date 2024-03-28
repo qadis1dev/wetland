@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import "package:app/root.dart";
 import "package:app/screens/terms_and_confitions.dart";
 import "package:flutter/gestures.dart";
@@ -22,6 +24,38 @@ class _RegisterState extends State<Register> {
   final confirmPasswordController = TextEditingController();
   double widthSize = 0.0;
   double heightSize = 0.0;
+  createUser() async {
+    try {
+      final creds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      final db = FirebaseFirestore.instance;
+      await db.collection("users").doc(creds.user?.uid).set({
+        "uid": creds.user?.uid,
+        "email": emailController.text,
+        "first_name": fNameController.text,
+        "last_name": lNameController.text,
+        "user_type": 2,
+        "account_type": "email"
+      });
+      return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Root()), (route) => false);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "weak-password") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Weak password"), backgroundColor: Color(0xff46923c),)
+        );
+      } else if (e.code == "email-already-in-use") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Email already user"), backgroundColor: Color(0xff46923c),)
+        );
+      }
+     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error"), backgroundColor: Color(0xff46923c),)
+      );
+     }
+  }
   @override
   Widget build(BuildContext context) {
     widthSize = MediaQuery.of(context).size.width;
@@ -297,20 +331,12 @@ class _RegisterState extends State<Register> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
-                  try {
-                    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: emailController.text,
-                      password: passwordController.text,
+                  if (agreedToTerms != true) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Agree to terms"), backgroundColor: Color(0xFF46923c),)
                     );
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (contaxt)=> Root()));
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'weak-password') {
-                      print('============================The password provided is too weak.');
-                    } else if (e.code == 'email-already-in-use') {
-                      print('=========================The account already exists for that email.');
-                    }
-                  } catch (e) {
-                    print(e);
+                  } else {
+                    await createUser();
                   }
                 },
                 child: Text(

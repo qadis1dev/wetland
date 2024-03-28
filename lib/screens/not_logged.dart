@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'package:app/root.dart';
 import 'package:app/screens/register.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,27 @@ class _NotLoggedState extends State<NotLogged> {
       idToken: googleAuth?.idToken,
     );
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+      return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (conext) => Root()), (route) => false);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("User not found"), backgroundColor: Color(0xff46923c),)
+        );
+      } else if (e.code == "wrong-password") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Wrong password"), backgroundColor: Color(0xff46923c),)
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error"), backgroundColor: Color(0xff46923c),)
+      );
+    }
   }
   bool secureText = true;
   TextEditingController passwordController = TextEditingController();
@@ -154,8 +176,14 @@ class _NotLoggedState extends State<NotLogged> {
                 borderRadius: BorderRadius.circular(50),
               ),
               child: ElevatedButton(
-                onPressed: () {
-                  //login functionality here
+                onPressed: () async {
+                  if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Fields cant be empty"), backgroundColor: Color(0xff46923c),)
+                    );
+                  } else {
+                    await signIn();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // White background when it's not clicked
