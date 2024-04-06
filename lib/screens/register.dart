@@ -382,16 +382,16 @@ class _RegisterState extends State<Register> {
                       }
                     }
                   },
-                  child: Text(
-                    'Register',
-                    style: TextStyle(color: Color(0xFF46923c), fontWeight: FontWeight.bold, fontSize: widthSize*0.058,),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white, // White background when it's not clicked
                     foregroundColor: Color(0xFF46923c), // White background when it's clicked
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
+                  ),
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Color(0xFF46923c), fontWeight: FontWeight.bold, fontSize: widthSize*0.058,),
                   ),
                 ),
               ),
