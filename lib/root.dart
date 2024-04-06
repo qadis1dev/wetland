@@ -1,6 +1,5 @@
 import 'package:app/screens/home.dart';
 import 'package:app/screens/profile_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Root extends StatefulWidget {
