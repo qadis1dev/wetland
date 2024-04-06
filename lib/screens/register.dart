@@ -248,6 +248,8 @@ class _RegisterState extends State<Register> {
                       return "Please enter password";
                     } else if (value.length < 7) {
                       return "Password must be 7 characters or longer";
+                    } else if (value != confirmPasswordController.text) {
+                      return "Passwords dont match";
                     } else {
                       return null;
                     }
@@ -298,6 +300,8 @@ class _RegisterState extends State<Register> {
                       return "Please enter password";
                     } else if (value.length < 7) {
                       return "Password must be 7 characters or longer";
+                    } else if (value != passwordController.text) {
+                      return "Passwords dont match";
                     } else {
                       return null;
                     }

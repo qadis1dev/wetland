@@ -22,7 +22,7 @@ class _RootState extends State<Root> {
       body: _selectedIndex == 0 ? Home() : _selectedIndex == 1 ? SizedBox() : ProfileView(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xff46923c),
-        selectedItemColor: Colors.black87,
+        selectedItemColor: Colors.white,
         unselectedItemColor: Colors.black87,
         selectedFontSize: 14,
         selectedLabelStyle: const TextStyle(
