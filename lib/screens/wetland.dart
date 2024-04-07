@@ -1,3 +1,4 @@
+import 'package:app/screens/edit_wetland.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,13 @@ class _WetLandState extends State<WetLand> {
       ),
       floatingActionButton: user == 1
       ? FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => EditWetland(id: widget.id),
+            )
+          );
+        },
         backgroundColor: Color(0xFF46932c),
         child: Icon(
           Icons.edit,
