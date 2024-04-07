@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'package:app/root.dart';
+import 'package:app/screens/add_admin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,13 @@ class _LoggedState extends State<Logged> {
           ),
           data["user_type"] == 0
           ? ListTile(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AddAdmin(),
+                )
+              );
+            },
             title: Text("Add admin"),
           )
           : SizedBox(),
