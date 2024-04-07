@@ -1,3 +1,4 @@
+import 'package:app/screens/birds.dart';
 import 'package:app/screens/wetlands.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,13 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Birds(),
+                      )
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Color(0xFF46923c), 
