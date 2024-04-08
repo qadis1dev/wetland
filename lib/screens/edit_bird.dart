@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +38,7 @@ class _EditBirdState extends State<EditBird> {
     }
   }
 
-  editWetland() async {
+  editBird() async {
     try {
       await FirebaseFirestore.instance.collection("birds").doc(widget.id).set({
         "title": titleController.text,
@@ -45,7 +47,19 @@ class _EditBirdState extends State<EditBird> {
       return Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error editing wetland"), backgroundColor: Color(0xFF46923c),)
+        SnackBar(content: Text("Error editing bird"), backgroundColor: Color(0xFF46923c),)
+      );
+    }
+  }
+
+  deleteBird() async {
+    try {
+      await FirebaseFirestore.instance.collection("birds").doc(widget.id).delete();
+      Navigator.of(context).pop();
+      return Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting bird"), backgroundColor: Color(0xFF46923c),)
       );
     }
   }
@@ -167,7 +181,7 @@ class _EditBirdState extends State<EditBird> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await editWetland();
+                      await editBird();
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -181,6 +195,37 @@ class _EditBirdState extends State<EditBird> {
                     "Edit bird",
                     style: TextStyle(
                       color: Color(0xFF46923c),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: widthSize*0.9,
+                height: heightSize * 0.065,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await deleteBird();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.red, 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: Text(
+                    "Delete bird",
+                    style: TextStyle(
+                      color: Colors.red,
                       fontWeight: FontWeight.bold,
                       fontSize: 20
                     ),

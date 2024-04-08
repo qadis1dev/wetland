@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:app/root.dart';
+import 'package:app/screens/forget_password.dart';
 import 'package:app/screens/register.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -41,13 +42,14 @@ class _NotLoggedState extends State<NotLogged> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
       return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (conext) => Root()), (route) => false);
     } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
+      print(e.code);
+      if (e.code == "invalid-credential") {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User not found"), backgroundColor: Color(0xff46923c),)
+          SnackBar(content: Text("Invalid credentials"), backgroundColor: Color(0xff46923c),)
         );
       } else if (e.code == "wrong-password") {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Wrong password"), backgroundColor: Color(0xff46923c),)
+          SnackBar(content: Text("Firebase error"), backgroundColor: Color(0xff46923c),)
         );
       }
     } catch (e) {
@@ -187,6 +189,11 @@ class _NotLoggedState extends State<NotLogged> {
                 padding: EdgeInsets.only(right: 35,bottom: 15,),
                 child: TextButton(
                   onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ForgetPassword(),
+                      )
+                    );
                   },
                   child: Text(
                     'Forgot password?',

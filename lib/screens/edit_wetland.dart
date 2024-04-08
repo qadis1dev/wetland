@@ -52,6 +52,17 @@ class _EditWetlandState extends State<EditWetland> {
     }
   }
 
+  deleteWetland() async {
+    try {
+      await FirebaseFirestore.instance.collection("wetlands").doc(widget.id).delete();
+      return Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting wetland"), backgroundColor: Color(0xFF46923c),)
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -183,6 +194,37 @@ class _EditWetlandState extends State<EditWetland> {
                     "Edit wetland",
                     style: TextStyle(
                       color: Color(0xFF46923c),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: widthSize*0.9,
+                height: heightSize * 0.065,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await deleteWetland();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.red, 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: Text(
+                    "Delete wetland",
+                    style: TextStyle(
+                      color: Colors.red,
                       fontWeight: FontWeight.bold,
                       fontSize: 20
                     ),

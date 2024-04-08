@@ -86,7 +86,8 @@ class _WetlandsState extends State<Wetlands> {
                   MaterialPageRoute(
                     builder: (context) => WetLand(id: wetlands[index].id, title: wetlands[index].data()["title"]),
                   )
-                );
+                )
+                .then((value) => getData());
               },
               title: Text(
                 wetlands[index].data()["title"]
@@ -108,7 +109,8 @@ class _WetlandsState extends State<Wetlands> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AddWetland())
-          );
+          )
+          .then((value) => getData());
         },
         backgroundColor: Color(0xFF46923c),
         child: Icon(

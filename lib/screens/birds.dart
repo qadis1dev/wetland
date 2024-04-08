@@ -86,7 +86,8 @@ class _BirdsState extends State<Birds> {
                   MaterialPageRoute(
                     builder: (context) => Bird(id: birds[index].id, title: birds[index].data()["title"]),
                   )
-                );
+                )
+                .then((value) => getData());
               },
               title: Text(
                 birds[index].data()["title"]
@@ -108,7 +109,8 @@ class _BirdsState extends State<Birds> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AddBird())
-          );
+          )
+          .then((value) => getData());
         },
         backgroundColor: Color(0xFF46923c),
         child: Icon(
