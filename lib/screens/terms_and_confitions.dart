@@ -28,7 +28,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
-          children: [
+          children: const [
             Text("Terms and Conditions")
           ],
         ),
