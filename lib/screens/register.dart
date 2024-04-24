@@ -34,8 +34,7 @@ class _RegisterState extends State<Register> {
       await db.collection("users").doc(creds.user?.uid).set({
         "uid": creds.user?.uid,
         "email": emailController.text,
-        "first_name": fNameController.text,
-        "last_name": lNameController.text,
+        "full_name": "${fNameController.text} ${lNameController.text}",
         "user_type": 2,
         "account_type": "email"
       });

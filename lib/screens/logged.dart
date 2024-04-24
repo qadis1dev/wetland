@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
+// ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables
 
 import 'package:app/root.dart';
 import 'package:app/screens/add_admin.dart';
@@ -18,7 +18,7 @@ class _LoggedState extends State<Logged> {
   bool loading = true;
   getUserData() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    print(uid);
+    print(FirebaseAuth.instance.currentUser!.displayName);
     final db = FirebaseFirestore.instance;
     final data1 = await db.collection("users").doc(uid).get();
     return setState(() {
@@ -46,7 +46,7 @@ class _LoggedState extends State<Logged> {
           ),
           Center(
             child: Text(
-              "${data["first_name"]} ${data["last_name"]}",
+              "${data["full_name"]}",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold
@@ -55,7 +55,7 @@ class _LoggedState extends State<Logged> {
           ),
           Center(
             child: Text(
-              data["user_type"] == 0 ? "Super Admin" : data["user_type"] == 1 ? "Admin" : "User",
+              data["user_type"] == 0 ? "Super Admin" : data["user_type"] == 1 ? "Admin" : data["account_type"] == "email" ? "Email user" : "Google user",
               style: TextStyle(
                 fontSize: 16
               ),
@@ -64,17 +64,23 @@ class _LoggedState extends State<Logged> {
           Divider(
             thickness: 2,
           ),
-          ListTile(
-            title: Text("Change info"),
-          ),
-          Divider(
-            thickness: 1.5,
-          ),
-          ListTile(
-            title: Text("Change password"),
-          ),
-          Divider(
-            thickness: 1.5,
+          data["account_type"] == "google"
+          ? SizedBox()
+          : Column(
+            children: [
+              ListTile(
+                title: Text("Change info"),
+              ),
+              Divider(
+                thickness: 1.5,
+              ),
+              ListTile(
+                title: Text("Change password"),
+              ),
+              Divider(
+                thickness: 1.5,
+              ),
+            ],
           ),
           data["user_type"] == 0
           ? ListTile(

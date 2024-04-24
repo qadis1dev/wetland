@@ -3,9 +3,10 @@
 import 'package:app/root.dart';
 import 'package:app/screens/forget_password.dart';
 import 'package:app/screens/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import "package:firebase_auth/firebase_auth.dart";
 
 class NotLogged extends StatefulWidget {
@@ -18,23 +19,33 @@ class NotLogged extends StatefulWidget {
 class _NotLoggedState extends State<NotLogged> {
 
   signInWithGoogle() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("To be implemented later on."), backgroundColor: Color(0xff46923c),)
-    );
-    // try {
-    //   final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    //   final GoogleSignInAuthentication gAuth = await gUser!.authentication;
-    //   final cred = GoogleAuthProvider.credential(
-    //     accessToken: gAuth.accessToken,
-    //     idToken: gAuth.idToken
-    //   );
-    //   return await FirebaseAuth.instance.signInWithCredential(cred);
-    // } catch (e) {
-    //   print(e);
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text("Error"), backgroundColor: Color(0xff46923c),)
-    //   );
-    // }
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(content: Text("To be implemented later on."), backgroundColor: Color(0xff46923c),)
+    // );
+    try {
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      final cred = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken
+      );
+      final auth = FirebaseAuth.instance;
+      await auth.signInWithCredential(cred);
+      final db = FirebaseFirestore.instance;
+      await db.collection("users").doc(auth.currentUser!.uid).set({
+        "uid": auth.currentUser!.uid,
+        "email": auth.currentUser!.email,
+        "full_name": auth.currentUser!.displayName,
+        "user_type": 2,
+        "account_type": "google"
+      });
+            return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (conext) => Root()), (route) => false);
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error"), backgroundColor: Color(0xff46923c),)
+      );
+    }
   }
 
   signIn() async {
