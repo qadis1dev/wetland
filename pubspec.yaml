@@ -71,6 +71,9 @@ flutter:
     - assets/images/GIcon.png
     - assets/images/googleIcon.png
     - assets/images/person.png
+    - assets/images/undraw_through_the_park_lxnl.png
+    - assets/images/undraw_festivities_tvvj.png
+    - assets/images/undraw_quick_chat_re_bit5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
