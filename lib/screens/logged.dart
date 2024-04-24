@@ -2,6 +2,7 @@
 
 import 'package:app/root.dart';
 import 'package:app/screens/add_admin.dart';
+import 'package:app/screens/change_name.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,12 @@ class _LoggedState extends State<Logged> {
           : Column(
             children: [
               ListTile(
-                title: Text("Change info"),
+                title: Text("Change name"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder:(context) => ChangeName(),)
+                  ).then((value) => getUserData());
+                },
               ),
               Divider(
                 thickness: 1.5,
