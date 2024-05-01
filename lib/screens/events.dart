@@ -1,20 +1,19 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-
-import 'package:app/screens/add_bird.dart';
-import 'package:app/screens/bird.dart';
+import 'package:app/screens/add_event.dart';
+import 'package:app/screens/event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Birds extends StatefulWidget {
-  const Birds({super.key});
+class Events extends StatefulWidget {
+  const Events({super.key});
 
   @override
-  State<Birds> createState() => _BirdsState();
+  State<Events> createState() => _EventsState();
 }
 
-class _BirdsState extends State<Birds> {
-  var birds;
+class _EventsState extends State<Events> {
+  var events;
   var user;
   bool loading = true;
   bool isError = false;
@@ -34,9 +33,9 @@ class _BirdsState extends State<Birds> {
         });
       }
 
-      var birdsData = await db.collection("birds").get();
+      var eventsData = await db.collection("events").get();
       return setState(() {
-        birds = birdsData.docs;
+        events = eventsData.docs;
         loading = false;
       });
     } catch (e) {
@@ -59,7 +58,7 @@ class _BirdsState extends State<Birds> {
       appBar: AppBar(
         backgroundColor: Color(0xFF46923c),
         title: Text(
-          "Birds",
+          "Events",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -71,26 +70,26 @@ class _BirdsState extends State<Birds> {
       ? Center(
         child: Text("An error occured"),
       )
-      : birds.length == 0
+      : events.length == 0
       ? Center(
-        child: Text("No birds added yet"),
+        child: Text("No events added yet"),
       )
       : SingleChildScrollView(
         child: ListView.separated(
-          itemCount: birds.length,
+          itemCount: events.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Bird(id: birds[index].id, title: birds[index].data()["title"]),
+                    builder: (context) => Event(id: events[index].id, title: events[index].data()["title"]),
                   )
                 )
                 .then((value) => getData());
               },
               title: Text(
-                birds[index].data()["title"]
+                events[index].data()["title"]
               ),
             );
           },
@@ -108,7 +107,7 @@ class _BirdsState extends State<Birds> {
       : FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddBird())
+            MaterialPageRoute(builder: (context) => AddEvent())
           )
           .then((value) => getData());
         },

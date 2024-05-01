@@ -1,19 +1,19 @@
-import 'package:app/screens/edit_bird.dart';
+import 'package:app/screens/edit_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Bird extends StatefulWidget {
-  const Bird({super.key, required this.id, required this.title});
+class Event extends StatefulWidget {
+  const Event({super.key, required this.id, required this.title});
 
   final String id;
   final String title;
 
   @override
-  State<Bird> createState() => _BirdState();
+  State<Event> createState() => _EventState();
 }
 
-class _BirdState extends State<Bird> {
+class _EventState extends State<Event> {
   bool loading = true;
   bool isError = false;
   dynamic data;
@@ -34,9 +34,9 @@ class _BirdState extends State<Bird> {
         });
       }
 
-      var birdData = await db.collection("birds").doc(widget.id).get();
+      var eventData = await db.collection("events").doc(widget.id).get();
       return setState(() {
-        data = birdData;
+        data = eventData;
         loading = false;
       });
     } catch (e) {
@@ -85,7 +85,7 @@ class _BirdState extends State<Bird> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => EditBird(id: widget.id),
+              builder: (context) => EditEvent(id: widget.id),
             )
           );
         },

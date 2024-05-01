@@ -3,71 +3,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class EditBird extends StatefulWidget {
-  const EditBird({super.key, required this.id});
-
-  final String id;
+class AddEvent extends StatefulWidget {
+  const AddEvent({super.key});
 
   @override
-  State<EditBird> createState() => _EditBirdState();
+  State<AddEvent> createState() => _AddEventState();
 }
 
-class _EditBirdState extends State<EditBird> {
-  bool loading = true;
-  bool isError = false;
+class _AddEventState extends State<AddEvent> {
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
 
-  getData() async {
+  addEvent() async {
     try {
-      final db = FirebaseFirestore.instance;
-      var birdData = await db.collection("birds").doc(widget.id).get();
-      return setState(() {
-        titleController.text = birdData["title"];
-        bodyController.text = birdData["body"];
-        loading = false;
-      });
-    } catch (e) {
-      print(e);
-      return setState(() {
-        isError = true;
-        loading = false;
-      });
-    }
-  }
-
-  editBird() async {
-    try {
-      await FirebaseFirestore.instance.collection("birds").doc(widget.id).set({
+      await FirebaseFirestore.instance.collection("events").add({
         "title": titleController.text,
-        "body": bodyController.text
+        "body" : bodyController.text
       });
       return Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error editing bird"), backgroundColor: Color(0xFF46923c),)
+        SnackBar(content: Text("Error adding event"), backgroundColor: Color(0xFF46923c),)
       );
     }
-  }
-
-  deleteBird() async {
-    try {
-      await FirebaseFirestore.instance.collection("birds").doc(widget.id).delete();
-      Navigator.of(context).pop();
-      return Navigator.of(context).pop();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error deleting bird"), backgroundColor: Color(0xFF46923c),)
-      );
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
   }
 
   @override
@@ -76,25 +36,13 @@ class _EditBirdState extends State<EditBird> {
     double heightSize = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF46932c),
+        backgroundColor: Color(0xFF46923c),
         title: Text(
-          "Edit bird",
+          "Add event",
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: loading
-      ? Center(
-        child: Text(
-          "Loading..."
-        ),
-      )
-      : isError
-      ? Center(
-        child: Text(
-          "An error has occured"
-        ),
-      )
-      : Form(
+      body: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Center(
@@ -121,7 +69,7 @@ class _EditBirdState extends State<EditBird> {
                         hintText: "Title",
                         hintStyle: TextStyle(fontSize: 15),
                         contentPadding: EdgeInsets.only(left: 30),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xFF46923c)),
                           borderRadius: BorderRadius.circular(50),
@@ -181,7 +129,7 @@ class _EditBirdState extends State<EditBird> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await editBird();
+                      await addEvent();
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -192,40 +140,9 @@ class _EditBirdState extends State<EditBird> {
                     ),
                   ),
                   child: Text(
-                    "Edit bird",
+                    "Add event",
                     style: TextStyle(
                       color: Color(0xFF46923c),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: widthSize*0.9,
-                height: heightSize * 0.065,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await deleteBird();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.red, 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                  child: Text(
-                    "Delete bird",
-                    style: TextStyle(
-                      color: Colors.red,
                       fontWeight: FontWeight.bold,
                       fontSize: 20
                     ),

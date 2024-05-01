@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:app/screens/birds.dart';
+import 'package:app/screens/events.dart';
 import 'package:app/screens/wetlands.dart';
 import 'package:flutter/material.dart';
 
@@ -135,7 +136,13 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Events(),
+                          )
+                        );
+                      },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Color(0xFF46923c), 

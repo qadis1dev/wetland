@@ -17,8 +17,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   bool secureText = true;
   bool agreedToTerms = false;
-  final fNameController = TextEditingController();
-  final lNameController = TextEditingController();
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -34,7 +33,7 @@ class _RegisterState extends State<Register> {
       await db.collection("users").doc(creds.user?.uid).set({
         "uid": creds.user?.uid,
         "email": emailController.text,
-        "full_name": "${fNameController.text} ${lNameController.text}",
+        "full_name": nameController.text,
         "user_type": 2,
         "account_type": "email"
       });
@@ -94,98 +93,40 @@ class _RegisterState extends State<Register> {
                 ],
               ),
               SizedBox(height: heightSize*0.04,),
-              //text first and last name
-              SizedBox(
-                height: heightSize*0.055,
-                child: (
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            // color: Colors.pink,
-                              padding: EdgeInsets.only(left: 39.0,), // Add padding from the left side
-                              alignment: Alignment.centerLeft,
-                              child: Text('First name', style: TextStyle(fontWeight:FontWeight.bold,fontSize: widthSize*0.045,),
-                              )
-                          ),
-                        ),
-                        SizedBox(width: widthSize*0.03,),
-                        Expanded(
-                          child: Container(
-                            // color: Colors.pink,
-                              padding: EdgeInsets.only(left: 10.0,), // Add padding from the left side
-                              alignment: Alignment.centerLeft,
-                              child: Text('Last name', style: TextStyle(fontWeight:FontWeight.bold,fontSize: widthSize*0.045,),
-                              )
-                          ),
-                        ),
-                      ],
-                    )
-                ),
+              //text full name
+              Container(
+                padding: EdgeInsets.only(top: 17, left: 40, bottom: 10),
+                alignment: Alignment.centerLeft,
+                child: Text("Full name", style: TextStyle(fontWeight: FontWeight.bold, fontSize: widthSize*0.045)),
               ),
               //first and last name
               SizedBox(
                 width: widthSize*0.8,
-                child: (
-                  Row(
-                    children: [
-                      Expanded(
-                          child: TextFormField(
-                            controller: fNameController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your first name";
-                              } else {
-                                return null;
-                              }
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            cursorColor: Colors.green,
-                            decoration: InputDecoration(
-                              hintText: "First name",
-                              hintStyle: TextStyle(fontSize: 15),
-                              contentPadding: EdgeInsets.only(left: 30),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFF46923c)),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFF46923c),width: 2.0,),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                          ),),
-                      SizedBox(width: widthSize*0.03,),
-                      Expanded(
-                        child: TextFormField(
-                          controller: lNameController,
-                          validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your last name";
-                              } else {
-                                return null;
-                              }
-                            },
-                          keyboardType: TextInputType.emailAddress,
-                          cursorColor: Colors.green,
-                          decoration: InputDecoration(
-                            hintText: "Last name",
-                            hintStyle: TextStyle(fontSize: 15),
-                            contentPadding: EdgeInsets.only(left: 30),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF46923c)),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF46923c),width: 2.0,),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                        ),),
-                    ],
-                  )
+                child: TextFormField(
+                  controller: nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your full name";
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.name,
+                  cursorColor: Colors.green,
+                  decoration: InputDecoration(
+                    hintText: "Enter your full name",
+                    hintStyle: TextStyle(fontSize: 15),
+                    contentPadding: EdgeInsets.only(left: 30),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF46923c)),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF46923c),width: 2.0,),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
                 ),
               ),
               // text email

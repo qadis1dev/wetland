@@ -3,16 +3,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class EditBird extends StatefulWidget {
-  const EditBird({super.key, required this.id});
+class EditEvent extends StatefulWidget {
+  const EditEvent({super.key, required this.id});
 
   final String id;
 
   @override
-  State<EditBird> createState() => _EditBirdState();
+  State<EditEvent> createState() => _EditEventState();
 }
 
-class _EditBirdState extends State<EditBird> {
+class _EditEventState extends State<EditEvent> {
   bool loading = true;
   bool isError = false;
 
@@ -23,10 +23,10 @@ class _EditBirdState extends State<EditBird> {
   getData() async {
     try {
       final db = FirebaseFirestore.instance;
-      var birdData = await db.collection("birds").doc(widget.id).get();
+      var eventData = await db.collection("events").doc(widget.id).get();
       return setState(() {
-        titleController.text = birdData["title"];
-        bodyController.text = birdData["body"];
+        titleController.text = eventData["title"];
+        bodyController.text = eventData["body"];
         loading = false;
       });
     } catch (e) {
@@ -40,26 +40,26 @@ class _EditBirdState extends State<EditBird> {
 
   editBird() async {
     try {
-      await FirebaseFirestore.instance.collection("birds").doc(widget.id).set({
+      await FirebaseFirestore.instance.collection("events").doc(widget.id).set({
         "title": titleController.text,
         "body": bodyController.text
       });
       return Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error editing bird"), backgroundColor: Color(0xFF46923c),)
+        SnackBar(content: Text("Error editing event"), backgroundColor: Color(0xFF46923c),)
       );
     }
   }
 
   deleteBird() async {
     try {
-      await FirebaseFirestore.instance.collection("birds").doc(widget.id).delete();
+      await FirebaseFirestore.instance.collection("events").doc(widget.id).delete();
       Navigator.of(context).pop();
       return Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error deleting bird"), backgroundColor: Color(0xFF46923c),)
+        SnackBar(content: Text("Error deleting event"), backgroundColor: Color(0xFF46923c),)
       );
     }
   }
@@ -78,7 +78,7 @@ class _EditBirdState extends State<EditBird> {
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
         title: Text(
-          "Edit bird",
+          "Edit event",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -192,7 +192,7 @@ class _EditBirdState extends State<EditBird> {
                     ),
                   ),
                   child: Text(
-                    "Edit bird",
+                    "Edit event",
                     style: TextStyle(
                       color: Color(0xFF46923c),
                       fontWeight: FontWeight.bold,
@@ -223,7 +223,7 @@ class _EditBirdState extends State<EditBird> {
                     ),
                   ),
                   child: Text(
-                    "Delete bird",
+                    "Delete event",
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
