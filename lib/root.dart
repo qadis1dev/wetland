@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:app/screens/booked_trips.dart';
 import 'package:app/screens/home.dart';
 import 'package:app/screens/profile_view.dart';
 import 'package:app/screens/trips.dart';
@@ -60,7 +61,13 @@ class _RootState extends State<Root> {
             ),
             ListTile(
               title: Text("Booked trips"),
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BookedTrips(),
+                  )
+                );
+              },
             ),
             ListTile(
               title: Text("FAQ"),

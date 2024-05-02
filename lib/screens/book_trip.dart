@@ -1,6 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BookTrip extends StatefulWidget {
   const BookTrip({super.key, required this.id, required this.title, required this.date});
@@ -18,6 +21,7 @@ class _BookTripState extends State<BookTrip> {
   final _formKey = GlobalKey<FormState>();
   String selectedOccupation = "Researcher";
   final nameController = TextEditingController();
+  final phoneController = TextEditingController();
   int age = 1;
   String selectedNationality = "Oman";
   List<String> nationalities = [
@@ -30,6 +34,45 @@ class _BookTripState extends State<BookTrip> {
   ];
   String selectedGender = "Male";
   
+  bookTrip() async {
+    try {
+      final auth = FirebaseAuth.instance;
+      final db = FirebaseFirestore.instance;
+      if (auth.currentUser == null) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Trip is fully booked"), backgroundColor: Color(0xFF46923c),)
+        );
+      }
+      var trip = await db.collection("trips").doc(widget.id).get();
+      var bookings = await db.collection("bookings").where("trip_id", isEqualTo: widget.id).get();
+      if (bookings.docs.length == trip["slots"]) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Trip is fully booked"), backgroundColor: Color(0xFF46923c),)
+        );
+      }
+
+      final user = await db.collection("users").doc(auth.currentUser!.uid).get();
+      await db.collection("bookings").add({
+        "trip_id": widget.id,
+        "date": widget.date,
+        "user_id": user.id,
+        "full_name": nameController.text,
+        "gender": selectedGender,
+        "age": age,
+        "nationality": selectedNationality,
+        "occupation": selectedOccupation,
+        "trip_title": widget.title,
+        "phone_no": phoneController.text
+      });
+      Navigator.of(context).pop();
+      return Navigator.of(context).pop();
+    } catch (e) {
+      print(e);
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error in booking"), backgroundColor: Color(0xFF46923c),)
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +158,44 @@ class _BookTripState extends State<BookTrip> {
                   cursorColor: Colors.green,
                   decoration: InputDecoration(
                     hintText: "Enter your full name",
+                    hintStyle: TextStyle(fontSize: 15),
+                    contentPadding: EdgeInsets.only(left: 30),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF46923c)),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF46923c),width: 2.0,),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Container(
+                padding: EdgeInsets.only(left: 25, right: 25, bottom: 10),
+                alignment: Alignment.centerLeft,
+                child: Text("Phone no", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              ),
+              SizedBox(
+                width: widthSize - 50,
+                child: TextFormField(
+                  controller: phoneController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your phone number";
+                    } else {
+                      return null;
+                    }
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  keyboardType: TextInputType.phone,
+                  cursorColor: Colors.green,
+                  decoration: InputDecoration(
+                    hintText: "Enter your phone number",
                     hintStyle: TextStyle(fontSize: 15),
                     contentPadding: EdgeInsets.only(left: 30),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
@@ -223,6 +304,37 @@ class _BookTripState extends State<BookTrip> {
                       selectedGender = value!;
                     });
                   },
+                ),
+              ),
+              SizedBox(height: 20,),
+                              Container(
+                width: widthSize*0.9,
+                height: heightSize * 0.065,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF46923c)),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await bookTrip();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Color(0xFF46923c), 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: Text(
+                    "Book trip",
+                    style: TextStyle(
+                      color: Color(0xFF46923c),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20,),
