@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'package:app/screens/feedback.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -64,8 +65,18 @@ class _BookTripState extends State<BookTrip> {
         "trip_title": widget.title,
         "phone_no": phoneController.text
       });
-      Navigator.of(context).pop();
-      return Navigator.of(context).pop();
+
+      var checkFeedback = await db.collection("feedbacks").where("user_id", isEqualTo: user.id).get();
+      if (checkFeedback.docs.isEmpty) {
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FeedBack(),
+          )
+        );
+      } else {
+        Navigator.of(context).pop();
+        return Navigator.of(context).pop();
+      }
     } catch (e) {
       print(e);
       return ScaffoldMessenger.of(context).showSnackBar(
