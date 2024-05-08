@@ -292,6 +292,7 @@ class _NotLoggedState extends State<NotLogged> {
                   ],
                 ),
               ),
+              SizedBox(height: 20,)
           ],
         )
       ),
