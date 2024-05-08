@@ -95,7 +95,7 @@ class _TripState extends State<Trip> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Current slots:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text(data["slots"].toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text("${data["slots"] - bookings.length}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
               ),
             ),
