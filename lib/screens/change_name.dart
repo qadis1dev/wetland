@@ -121,35 +121,35 @@ class _ChangeNameState extends State<ChangeName> {
                   height: 30,
                 ),
                 Container(
-                width: widthSize*0.9,
-                height: heightSize * 0.065,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF46923c)),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await editName();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFF46923c), 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                  width: widthSize*0.9,
+                  height: heightSize * 0.065,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFF46923c)),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await editName();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Color(0xFF46923c), 
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: Text(
+                      "Edit name",
+                      style: TextStyle(
+                        color: Color(0xFF46923c),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      ),
                     ),
                   ),
-                  child: Text(
-                    "Edit name",
-                    style: TextStyle(
-                      color: Color(0xFF46923c),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    ),
-                  ),
                 ),
-              ),
               ],
             ),
           ),

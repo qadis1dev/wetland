@@ -14,7 +14,6 @@ class _AddTripState extends State<AddTrip> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
-  int slots = 1;
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -35,8 +34,8 @@ class _AddTripState extends State<AddTrip> {
       await db.collection("trips").add({
         "title": titleController.text,
         "body": bodyController.text,
-        "slots": slots,
-        "date": selectedDate
+        "date": selectedDate,
+        "has_timings": false
       });
       Navigator.of(context).pop();
     } catch (e) {
@@ -177,42 +176,6 @@ class _AddTripState extends State<AddTrip> {
                 SizedBox(
                   height: 30,
                 ),
-                Text(
-                  "Slots"
-                ),
-                SizedBox(height: 10,),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (slots == 1) {
-                            return;
-                          } else {
-                            setState(() {
-                              slots = slots - 1;
-                            });
-                          }
-                        },
-                        icon: Icon(Icons.remove),
-                        color: Color(0xFF46932c),
-                      ),
-                      Text(slots.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            slots = slots + 1;
-                          });
-                        },
-                        icon: Icon(Icons.add),
-                        color: Color(0xFF46932c),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 30,),
                 Container(
                   width: widthSize * 0.9,
                   height: heightSize * 0.065,

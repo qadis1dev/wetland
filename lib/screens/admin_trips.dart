@@ -1,5 +1,7 @@
 import 'package:app/screens/add_trip_slots.dart';
 import 'package:app/screens/add_trip.dart';
+import 'package:app/screens/add_trip_timings.dart';
+import 'package:app/screens/delete_trips.dart';
 import 'package:app/screens/feedbacks.dart';
 import 'package:flutter/material.dart';
 
@@ -77,6 +79,39 @@ class _AdminTripsState extends State<AdminTrips> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
+                        builder: (context) => AddTripTiming(),
+                      )
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Color(0xFF46932c),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)
+                    )
+                  ),
+                  child: Text(
+                    "Trip timing",
+                    style: TextStyle(
+                      color: Color(0xFF46932c),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Container(
+                width: widthSize * 0.9,
+                height: heightSize * 0.065,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF46932c)),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
                         builder: (context) => AddTripSlots(),
                       )
                     );
@@ -107,7 +142,13 @@ class _AdminTripsState extends State<AdminTrips> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DeleteTrips(),
+                      )
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.red,
@@ -119,66 +160,6 @@ class _AdminTripsState extends State<AdminTrips> {
                     "Delete trip",
                     style: TextStyle(
                       color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              Container(
-                width: widthSize * 0.9,
-                height: heightSize * 0.065,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF46932c)),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFF46932c),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)
-                    )
-                  ),
-                  child: Text(
-                    "Get trip report",
-                    style: TextStyle(
-                      color: Color(0xFF46932c),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              Container(
-                width: widthSize * 0.9,
-                height: heightSize * 0.065,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF46932c)),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Feedbacks(),
-                      )
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Color(0xFF46932c),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)
-                    )
-                  ),
-                  child: Text(
-                    "Feedbacks",
-                    style: TextStyle(
-                      color: Color(0xFF46932c),
                       fontWeight: FontWeight.bold,
                       fontSize: 20
                     ),

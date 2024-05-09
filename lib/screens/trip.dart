@@ -1,5 +1,5 @@
 import 'package:app/screens/book_trip.dart';
-import 'package:app/screens/edit_event.dart';
+import 'package:app/screens/select_timing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,6 @@ class _TripState extends State<Trip> {
   bool isError = false;
   dynamic data;
   dynamic user;
-  dynamic bookings;
 
   getData() async {
     try {
@@ -36,11 +35,9 @@ class _TripState extends State<Trip> {
         });
       }
 
-      var eventData = await db.collection("trips").doc(widget.id).get();
-      var bookingsData = await db.collection("bookings").where("trip_id", isEqualTo: widget.id).get();
+      var tripData = await db.collection("trips").doc(widget.id).get();
       return setState(() {
-        data = eventData;
-        bookings = bookingsData.docs;
+        data = tripData;
         loading = false;
       });
     } catch (e) {
@@ -89,28 +86,6 @@ class _TripState extends State<Trip> {
               ),
             ),
             SizedBox(height: 20,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Current slots:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text("${data["slots"] - bookings.length}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                ],
-              ),
-            ),
-            SizedBox(height: 20,),
-            Padding (
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Current bookings:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text(bookings.length.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                ],
-              ),
-            ),
-            SizedBox(height: 20,),
             Padding (
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
@@ -137,9 +112,9 @@ class _TripState extends State<Trip> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => BookTrip(id: widget.id, title: widget.title, date: data["date"].toDate().toString().split(" ")[0],),
+                          builder: (context) => SelectTiming(id: widget.id),
                         )
-                      ).then((value) => getData());
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -149,7 +124,7 @@ class _TripState extends State<Trip> {
                       )
                     ),
                     child: Text(
-                      "Book trip",
+                      "Select timing",
                       style: TextStyle(
                         color: Color(0xFF46932c),
                         fontWeight: FontWeight.bold,

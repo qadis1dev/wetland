@@ -1,8 +1,10 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables
 
 import 'package:app/screens/birds.dart';
 import 'package:app/screens/events.dart';
 import 'package:app/screens/wetlands.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

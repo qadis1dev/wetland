@@ -1,52 +1,36 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
-import 'package:app/screens/admin_trips.dart';
-import 'package:app/screens/trip.dart';
+import 'package:app/screens/add_slots.dart';
+import 'package:app/screens/add_timings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Trips extends StatefulWidget {
-  const Trips({super.key});
+class AddTripTiming extends StatefulWidget {
+  const AddTripTiming({super.key});
 
   @override
-  State<Trips> createState() => _TripsState();
+  State<AddTripTiming> createState() => _AddTripTimingState();
 }
 
-class _TripsState extends State<Trips> {
+class _AddTripTimingState extends State<AddTripTiming> {
   var trips;
-  var user;
   bool loading = true;
   bool isError = false;
 
   getData() async {
     try {
-      final auth = FirebaseAuth.instance;
       final db = FirebaseFirestore.instance;
-      if (auth.currentUser != null) {
-        var userData = await db.collection("users").doc(auth.currentUser!.uid).get();
-        setState(() {
-          user = userData["user_type"] == 2 ? 2 : 1;
-        });
-      } else {
-        setState(() {
-          user = 0;
-        });
-      }
-
-      DateTime dateTime = DateTime.now();
-      var tripsData = await db.collection("trips").where("date", isGreaterThanOrEqualTo: DateTime(dateTime.year, dateTime.month, dateTime.day)).get();
+      var tripsData = await db.collection("trips").orderBy("date", descending: false).get();
       return setState(() {
         trips = tripsData.docs;
         loading = false;
       });
     } catch (e) {
-      print(e);
+      print("Data error $e");
       return setState(() {
         isError = true;
         loading = false;
       });
     }
+
   }
 
   @override
@@ -58,12 +42,10 @@ class _TripsState extends State<Trips> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF46932c),
+        backgroundColor: Color(0xFF46923c),
         title: Text(
-          "Trips",
-          style: TextStyle(
-            color: Colors.white
-          ),
+          "Select trip",
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: loading
@@ -89,7 +71,7 @@ class _TripsState extends State<Trips> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Trip(id: trips[index].id, title: trips[index].data()["title"],),
+                    builder: (context) => AddTimings(id: trips[index].id,),
                   )
                 ).then((value) => getData());
               },
@@ -106,24 +88,6 @@ class _TripsState extends State<Trips> {
               height: 1.5,
             );
           },
-        ),
-      ),
-      floatingActionButton: user == 2
-      ? SizedBox()
-      : user == 0
-      ? SizedBox()
-      : FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AdminTrips(),
-            )
-          ).then((value) => getData());
-        },
-        backgroundColor: Color(0xFF46932c),
-        child: Icon(
-          Icons.admin_panel_settings,
-          color: Colors.white,
         ),
       ),
     );

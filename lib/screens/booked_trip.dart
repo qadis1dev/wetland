@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,18 @@ class _BookedTripState extends State<BookedTrip> {
     }
   }
 
+  cancelBooking() async {
+    try {
+      final db = FirebaseFirestore.instance;
+      await db.collection("bookings").doc(widget.id).delete();
+      return Navigator.of(context).pop();
+    } catch (e) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error canceling booking"), backgroundColor: Color(0xFF46923c),)
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +54,8 @@ class _BookedTripState extends State<BookedTrip> {
   }
   @override
   Widget build(BuildContext context) {
+    double widthSize = MediaQuery.of(context).size.width;
+    double heightSize = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
@@ -67,6 +83,17 @@ class _BookedTripState extends State<BookedTrip> {
                 children: [
                   Text("Full name:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   Text(data["full_name"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Timing:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(data["timing_title"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
               ),
             ),
@@ -134,6 +161,35 @@ class _BookedTripState extends State<BookedTrip> {
                   Text("Occupation:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   Text(data["occupation"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
+              ),
+            ),
+            SizedBox(height: 20,),
+            Container(
+              width: widthSize*0.9,
+              height: heightSize * 0.065,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: ElevatedButton(
+                onPressed: () async {
+                  await cancelBooking();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.red, 
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+                child: Text(
+                  "Cancel trip",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20
+                  ),
+                ),
               ),
             ),
           ],

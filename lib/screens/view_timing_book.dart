@@ -1,36 +1,39 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+// ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'package:app/screens/book_trip.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AddSlots extends StatefulWidget {
-  const AddSlots({super.key, required this.id, required this.trip, required this.tripId});
+class ViewTimingBook extends StatefulWidget {
+  const ViewTimingBook({
+    super.key,
+    required this.timing,
+    required this.trip,
+    required this.timingId,
+    required this.tripId
+  });
 
-  final String id;
   final dynamic trip;
+  final dynamic timing;
   final String tripId;
+  final String timingId;
 
   @override
-  State<AddSlots> createState() => _AddSlotsState();
+  State<ViewTimingBook> createState() => _ViewTimingBookState();
 }
 
-class _AddSlotsState extends State<AddSlots> {
+class _ViewTimingBookState extends State<ViewTimingBook> {
   bool loading = true;
   bool isError = false;
-  int slots = 1;
-  late int oldSlots;
-  var bookings = [];
-
-
+  dynamic bookings;
+  
   getData() async {
     try {
       final db = FirebaseFirestore.instance;
-      var timingData = await db.collection("trips").doc(widget.tripId).collection("timings").doc(widget.id).get();
-      var bookingsData = await db.collection("bookings").where("trip_id", isEqualTo: widget.id).get();
+      var bookings1 = await db.collection("bookings").where("trip_id", isEqualTo: widget.tripId).where("timing_id", isEqualTo: widget.timingId).get();
       return setState(() {
+        bookings = bookings1.docs;
         loading = false;
-        bookings = bookingsData.docs;
-        oldSlots = timingData["slots"];
       });
     } catch (e) {
       print(e);
@@ -41,17 +44,21 @@ class _AddSlotsState extends State<AddSlots> {
     }
   }
 
-  addSlots() async {
+  deleteTiming() async {
     try {
       final db = FirebaseFirestore.instance;
-      await db.collection("trips").doc(widget.tripId).collection("timings").doc(widget.id).update({
-        "slots": oldSlots + slots
-      });
-      Navigator.of(context).pop();
+      if (bookings.length >= 1) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("This timing has bookings so you can not delete it"), backgroundColor: Color(0xFF46923c),)
+        );
+      }
+
+      await db.collection("trips").doc(widget.tripId).collection("timings").doc(widget.timingId).delete();
+      return Navigator.of(context).pop();
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error updating slots"), backgroundColor: Color(0xFF46923c),)
+        SnackBar(content: Text("Error deleting timing"), backgroundColor: Color(0xFF46923c),)
       );
     }
   }
@@ -69,7 +76,7 @@ class _AddSlotsState extends State<AddSlots> {
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
         title: Text(
-          "Add slots",
+          "View timing",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -92,7 +99,7 @@ class _AddSlotsState extends State<AddSlots> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Trip ritle:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text("Title:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   Text(widget.trip["title"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                 ],
               ),
@@ -105,8 +112,8 @@ class _AddSlotsState extends State<AddSlots> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Current slots:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text(oldSlots.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text("Date:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(widget.trip["date"].toDate().toString().split(" ")[0], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
               ),
             ),
@@ -116,8 +123,8 @@ class _AddSlotsState extends State<AddSlots> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Current bookings:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text(bookings.length.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text("Timing:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(widget.timing["title"], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
               ),
             ),
@@ -127,47 +134,26 @@ class _AddSlotsState extends State<AddSlots> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Slots after adding:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text("${slots + oldSlots}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                  Text("Total slots", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(widget.timing["slots"].toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                 ],
               ),
             ),
             SizedBox(height: 20,),
-            Text("Slots to add"),
-            SizedBox(height: 10,),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+            Padding (
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      if (slots == 1) {
-                        return;
-                      } else {
-                        setState(() {
-                          slots = slots - 1;
-                        });
-                      }
-                    },
-                    icon: Icon(Icons.remove),
-                    color: Color(0xFF46932c),
-                  ),
-                  Text(slots.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        slots = slots + 1;
-                      });
-                    },
-                    icon: Icon(Icons.add),
-                    color: Color(0xFF46932c),
-                  ),
+                  Text("Total booked", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(bookings.length.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                 ],
               ),
             ),
             SizedBox(height: 20,),
-            Container(
+            bookings.length == widget.timing["slots"]
+            ? SizedBox()
+            : Container(
               width: widthSize * 0.9,
               height: heightSize * 0.065,
               decoration: BoxDecoration(
@@ -175,8 +161,18 @@ class _AddSlotsState extends State<AddSlots> {
                 borderRadius: BorderRadius.circular(50),
               ),
               child: ElevatedButton(
-                onPressed: () async {
-                  await addSlots();
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BookTrip(
+                        date: widget.trip["date"].toDate().toString().split(" ")[0],
+                        id: widget.tripId,
+                        timingId: widget.timingId,
+                        timingTitle: widget.timing["title"],
+                        title: widget.trip["title"],
+                      ),
+                    )
+                  ).then((value) => getData());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -186,7 +182,7 @@ class _AddSlotsState extends State<AddSlots> {
                   )
                 ),
                 child: Text(
-                  "Add slots",
+                  "Book timing",
                   style: TextStyle(
                     color: Color(0xFF46932c),
                     fontWeight: FontWeight.bold,

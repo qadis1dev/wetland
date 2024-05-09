@@ -80,7 +80,7 @@ class _BookedTripsState extends State<BookedTrips> {
                   MaterialPageRoute(
                     builder: (context) => BookedTrip(id: bookings[index].id, title: bookings[index].data()["trip_title"]),
                   )
-                );
+                ).then((value) => getData());
               },
               title: Text(
                 bookings[index].data()["trip_title"]

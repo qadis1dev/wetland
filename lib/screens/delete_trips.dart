@@ -1,16 +1,16 @@
-import 'package:app/screens/add_slots.dart';
-import 'package:app/screens/add_slots_1.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AddTripSlots extends StatefulWidget {
-  const AddTripSlots({super.key});
+class DeleteTrips extends StatefulWidget {
+  const DeleteTrips({super.key});
 
   @override
-  State<AddTripSlots> createState() => _AddTripSlotsState();
+  State<DeleteTrips> createState() => _DeleteTripsState();
 }
 
-class _AddTripSlotsState extends State<AddTripSlots> {
+class _DeleteTripsState extends State<DeleteTrips> {
   var trips;
   bool loading = true;
   bool isError = false;
@@ -18,7 +18,7 @@ class _AddTripSlotsState extends State<AddTripSlots> {
   getData() async {
     try {
       final db = FirebaseFirestore.instance;
-      var tripsData = await db.collection("trips").where("has_timings", isEqualTo: true).orderBy("date", descending: false).get();
+      var tripsData = await db.collection("trips").orderBy("date", descending: false).get();
       return setState(() {
         trips = tripsData.docs;
         loading = false;
@@ -33,6 +33,25 @@ class _AddTripSlotsState extends State<AddTripSlots> {
 
   }
 
+  deleteTrip(String id) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      var bookings = await db.collection("bookings").where("trip_id", isEqualTo: id).get();
+      if (bookings.docs.isNotEmpty) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("This trip has bookings. You can't delete it"), backgroundColor: Color(0xFF46923c),)
+        );
+      }
+
+      await db.collection("trips").doc(id).delete();
+      return Navigator.of(context).pop();
+    } catch (e) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting trip"), backgroundColor: Color(0xFF46923c),)
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +63,7 @@ class _AddTripSlotsState extends State<AddTripSlots> {
       appBar: AppBar(
         backgroundColor: Color(0xFF46923c),
         title: Text(
-          "Select trip",
+          "Select trip to delete",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -69,11 +88,7 @@ class _AddTripSlotsState extends State<AddTripSlots> {
           itemBuilder: (context, index) {
             return ListTile(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AddSlots1(id: trips[index].id,),
-                  )
-                ).then((value) => getData());
+                deleteTrip(trips[index].id);
               },
               title: Text(
                 trips[index].data()["title"]

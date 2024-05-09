@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class BookTrip extends StatefulWidget {
-  const BookTrip({super.key, required this.id, required this.title, required this.date});
+  const BookTrip({super.key,required this.timingTitle, required this.id, required this.title, required this.date, required this.timingId});
 
   final String id;
   final String title;
   final String date;
+  final String timingId;
+  final String timingTitle;
 
   @override
   State<BookTrip> createState() => _BookTripState();
@@ -23,7 +25,7 @@ class _BookTripState extends State<BookTrip> {
   String selectedOccupation = "Researcher";
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
-  int age = 1;
+  final ageController = TextEditingController();
   String selectedNationality = "Oman";
   List<String> nationalities = [
     "Oman",
@@ -44,9 +46,9 @@ class _BookTripState extends State<BookTrip> {
           SnackBar(content: Text("Trip is fully booked"), backgroundColor: Color(0xFF46923c),)
         );
       }
-      var trip = await db.collection("trips").doc(widget.id).get();
-      var bookings = await db.collection("bookings").where("trip_id", isEqualTo: widget.id).get();
-      if (bookings.docs.length == trip["slots"]) {
+      var timing = await db.collection("trips").doc(widget.id).collection("timings").doc(widget.timingId).get();
+      var bookings = await db.collection("bookings").where("trip_id", isEqualTo: widget.id).where("timing_id", isEqualTo: widget.timingId).get();
+      if (bookings.docs.length == timing["slots"]) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Trip is fully booked"), backgroundColor: Color(0xFF46923c),)
         );
@@ -57,9 +59,11 @@ class _BookTripState extends State<BookTrip> {
         "trip_id": widget.id,
         "date": widget.date,
         "user_id": user.id,
+        "timing_title": widget.timingTitle,
+        "timing_id": widget.timingId,
         "full_name": nameController.text,
         "gender": selectedGender,
-        "age": age,
+        "age": int.parse(ageController.text),
         "nationality": selectedNationality,
         "occupation": selectedOccupation,
         "trip_title": widget.title,
@@ -121,6 +125,17 @@ class _BookTripState extends State<BookTrip> {
                   children: [
                     Text("Date: ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                     Text(widget.date, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Timing: ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                    Text(widget.timingTitle, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ],
                 ),
               ),
@@ -227,35 +242,36 @@ class _BookTripState extends State<BookTrip> {
                 alignment: Alignment.centerLeft,
                 child: Text("Age", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        if (age == 1) {
-                          return;
-                        } else {
-                          setState(() {
-                            age = age - 1;
-                          });
-                        }
-                      },
-                      icon: Icon(Icons.remove),
-                      color: Color(0xFF46932c),
-                    ),
-                    Text(age.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          age = age + 1;
-                        });
-                      },
-                      icon: Icon(Icons.add),
-                      color: Color(0xFF46932c),
-                    ),
+              SizedBox(
+                width: widthSize - 50,
+                child: TextFormField(
+                  controller: ageController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your age";
+                    } else {
+                      return null;
+                    }
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly
                   ],
+                  keyboardType: TextInputType.number,
+                  cursorColor: Colors.green,
+                  decoration: InputDecoration(
+                    hintText: "Enter your age",
+                    hintStyle: TextStyle(fontSize: 15),
+                    contentPadding: EdgeInsets.only(left: 30),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(50),),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF46923c)),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF46923c),width: 2.0,),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
