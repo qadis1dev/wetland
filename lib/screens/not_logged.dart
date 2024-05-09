@@ -159,8 +159,6 @@ class _NotLoggedState extends State<NotLogged> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please enter password";
-                    } else if (value.length < 7) {
-                      return "Password must be 7 characters or longer";
                     } else {
                       return null;
                     }
