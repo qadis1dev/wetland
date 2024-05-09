@@ -106,10 +106,13 @@ class _LocalAuthState extends State<LocalAuth> {
       )
       : Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Authenticate using device biometrics"
+              "Authenticate using device biometrics",
+              style: TextStyle(fontSize: 18),
             ),
+            SizedBox(height: 20,),
             Container(
                 width: widthSize * 0.8,
                 height: heightSize * 0.065,
@@ -119,7 +122,7 @@ class _LocalAuthState extends State<LocalAuth> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
-                    
+                    authnticate();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white, // White background when it's not clicked
