@@ -1,4 +1,3 @@
-import 'package:app/screens/add_slots.dart';
 import 'package:app/screens/add_slots_1.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

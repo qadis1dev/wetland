@@ -1,7 +1,4 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-
-import 'package:app/screens/add_bird.dart';
-import 'package:app/screens/bird.dart';
 import 'package:app/screens/view_feedback.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

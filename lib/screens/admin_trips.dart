@@ -2,7 +2,6 @@ import 'package:app/screens/add_trip_slots.dart';
 import 'package:app/screens/add_trip.dart';
 import 'package:app/screens/add_trip_timings.dart';
 import 'package:app/screens/delete_trips.dart';
-import 'package:app/screens/feedbacks.dart';
 import 'package:flutter/material.dart';
 
 class AdminTrips extends StatefulWidget {

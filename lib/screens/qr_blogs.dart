@@ -1,36 +1,38 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-import 'package:app/screens/add_timings.dart';
+
+import 'package:app/screens/add_blog.dart';
+import 'package:app/screens/blog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AddTripTiming extends StatefulWidget {
-  const AddTripTiming({super.key});
+class QrBlogs extends StatefulWidget {
+  const QrBlogs({super.key});
 
   @override
-  State<AddTripTiming> createState() => _AddTripTimingState();
+  State<QrBlogs> createState() => _QrBlogsState();
 }
 
-class _AddTripTimingState extends State<AddTripTiming> {
-  var trips;
+class _QrBlogsState extends State<QrBlogs> {
+  var blogs;
   bool loading = true;
   bool isError = false;
 
   getData() async {
     try {
       final db = FirebaseFirestore.instance;
-      var tripsData = await db.collection("trips").orderBy("date", descending: false).get();
+
+      var blogsData = await db.collection("blogs").get();
       return setState(() {
-        trips = tripsData.docs;
+        blogs = blogsData.docs;
         loading = false;
       });
     } catch (e) {
-      print("Data error $e");
+      print(e);
       return setState(() {
         isError = true;
         loading = false;
       });
     }
-
   }
 
   @override
@@ -44,7 +46,7 @@ class _AddTripTimingState extends State<AddTripTiming> {
       appBar: AppBar(
         backgroundColor: Color(0xFF46923c),
         title: Text(
-          "Select trip",
+          "Blogs",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -54,42 +56,51 @@ class _AddTripTimingState extends State<AddTripTiming> {
       )
       : isError
       ? Center(
-        child: Text("An error has occured"),
+        child: Text("An error occured"),
       )
-      : trips.length == 0
+      : blogs.length == 0
       ? Center(
-        child: Text(
-          "No trips added yet"
-        ),
+        child: Text("No blogs added yet"),
       )
       : SingleChildScrollView(
         child: ListView.separated(
-          itemCount: trips.length,
+          itemCount: blogs.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => AddTimings(id: trips[index].id,),
+                    builder: (context) => BlogAdmin(id: blogs[index].id, title: blogs[index].data()["title"]),
                   )
                 ).then((value) => getData());
               },
               title: Text(
-                trips[index].data()["title"]
-              ),
-              subtitle: Text(
-                "Date: ${trips[index].data()["date"].toDate().toString().split(" ")[0]}"
+                blogs[index].data()["title"]
               ),
             );
           },
-          separatorBuilder: (context, index) {
+          separatorBuilder:(context, index) {
             return Divider(
-              height: 1.5,
+              thickness: 1.5,
             );
           },
-        ),
+        )
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddBlog(),
+            )
+          ).then((value) => getData());
+        },
+        backgroundColor: Color(0xFF46923c),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ), 
     );
   }
 }
