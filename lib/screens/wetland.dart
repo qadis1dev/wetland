@@ -2,6 +2,7 @@ import 'package:app/screens/edit_wetland.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 
 class WetLand extends StatefulWidget {
   const WetLand({super.key, required this.id, required this.title});
@@ -18,6 +19,7 @@ class _WetLandState extends State<WetLand> {
   bool isError = false;
   dynamic data;
   dynamic user;
+  dynamic images;
 
   getData() async {
     try {
@@ -35,8 +37,10 @@ class _WetLandState extends State<WetLand> {
       }
 
       var wetlandData = await db.collection("wetlands").doc(widget.id).get();
+      var wetlandImages = await db.collection("wetlands").doc(widget.id).collection("images").get();
       return setState(() {
         data = wetlandData;
+        images = wetlandImages.docs;
         loading = false;
       });
     } catch (e) {
@@ -73,11 +77,40 @@ class _WetLandState extends State<WetLand> {
         child: Text("An error occured"),
       )
       : SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            data["body"]
-          ),
+        child: Column(
+          children: [
+            images.length == 0
+            ? SizedBox()
+            : SizedBox(
+              height: 200,
+              child: images.length == 1
+              ? WidgetZoom(
+                heroAnimationTag: "tag",
+                zoomWidget: Image.network(images[0].data()["url"]),
+              )
+              : ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  return WidgetZoom(
+                    heroAnimationTag: "tag",
+                    zoomWidget: Image.network(images[index].data()["url"]),
+                  );
+                },
+              ),
+            ),
+            images.length == 0
+            ? SizedBox()
+            : Divider(
+              thickness: 2,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                data["body"]
+              ),
+            ),
+          ],
         )
       ),
       floatingActionButton: user == 1

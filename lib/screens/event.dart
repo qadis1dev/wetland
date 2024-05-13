@@ -2,6 +2,7 @@ import 'package:app/screens/edit_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 
 class Event extends StatefulWidget {
   const Event({super.key, required this.id, required this.title});
@@ -18,6 +19,7 @@ class _EventState extends State<Event> {
   bool isError = false;
   dynamic data;
   dynamic user;
+  dynamic images;
 
   getData() async {
     try {
@@ -35,8 +37,10 @@ class _EventState extends State<Event> {
       }
 
       var eventData = await db.collection("events").doc(widget.id).get();
+      var eventImages = await db.collection("events").doc(widget.id).collection("images").get();
       return setState(() {
         data = eventData;
+        images = eventImages.docs;
         loading = false;
       });
     } catch (e) {
@@ -73,11 +77,42 @@ class _EventState extends State<Event> {
         child: Text("An error occured"),
       )
       : SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            data["body"]
-          ),
+        child: Column(
+          children: [
+            images.length == 0
+            ? SizedBox()
+            : SizedBox(
+              height: 200,
+              child: images.length == 1
+              ? WidgetZoom(
+                heroAnimationTag: "tag",
+                zoomWidget: Image.network(images[0].data()["url"]),
+              )
+              : ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  return WidgetZoom(
+                    heroAnimationTag: "tag",
+                    zoomWidget: Image.network(images[index].data()["url"]),
+                  );
+                },
+              ),
+            ),
+            images.length == 0
+            ? SizedBox()
+            : Divider(
+              thickness: 2,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                data["body"],
+                textAlign: TextAlign.start,
+              ),
+            ),
+
+          ],
         )
       ),
       floatingActionButton: user == 1

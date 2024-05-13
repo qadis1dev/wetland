@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:app/screens/wetland_images_admin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -192,6 +193,41 @@ class _EditWetlandState extends State<EditWetland> {
                   ),
                   child: Text(
                     "Edit wetland",
+                    style: TextStyle(
+                      color: Color(0xFF46923c),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: widthSize*0.9,
+                height: heightSize * 0.065,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF46923c)),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => WetlandImagesAdmin(id: widget.id),
+                      )
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Color(0xFF46923c), 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: Text(
+                    "View Images",
                     style: TextStyle(
                       color: Color(0xFF46923c),
                       fontWeight: FontWeight.bold,

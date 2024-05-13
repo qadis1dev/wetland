@@ -1,4 +1,5 @@
 import 'package:app/firebase_options.dart';
+import 'package:app/root.dart';
 import 'package:app/screens/local_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LocalAuth(),
+      home: Root(),
     );
   }
 }
