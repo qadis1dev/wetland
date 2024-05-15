@@ -5,6 +5,7 @@ import 'package:app/screens/feedbacks.dart';
 import 'package:app/screens/home.dart';
 import 'package:app/screens/profile_view.dart';
 import 'package:app/screens/qr_blogs.dart';
+import 'package:app/screens/qr_scanner.dart';
 import 'package:app/screens/trips.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -167,7 +168,7 @@ class _RootState extends State<Root> {
         ),
       )
       : null,
-      body: _selectedIndex == 0 ? Home() : _selectedIndex == 1 ? SizedBox() : ProfileView(),
+      body: _selectedIndex == 0 ? Home() : _selectedIndex == 1 ? QrScanner() : ProfileView(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xff46923c),
         selectedItemColor: Colors.white,

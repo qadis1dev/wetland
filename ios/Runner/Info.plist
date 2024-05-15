@@ -45,5 +45,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs camera access to scan QR codes and take pictures</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs image library access to select images to upload</string>
 </dict>
 </plist>

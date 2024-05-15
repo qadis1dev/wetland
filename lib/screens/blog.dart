@@ -2,26 +2,39 @@
 import 'package:app/screens/edit_blog.dart';
 import 'package:app/screens/generate_qr.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class BlogAdmin extends StatefulWidget {
-  const BlogAdmin({super.key, required this.id, required this.title});
+class Blog extends StatefulWidget {
+  const Blog({super.key, required this.id});
 
   final String id;
-  final String title;
 
   @override
-  State<BlogAdmin> createState() => _BlogAdminState();
+  State<Blog> createState() => _BlogState();
 }
 
-class _BlogAdminState extends State<BlogAdmin> {
+class _BlogState extends State<Blog> {
   bool loading = true;
   bool isError = false;
   dynamic data;
+  dynamic user;
 
   getData() async {
+    final auth = FirebaseAuth.instance;
     try {
       final db = FirebaseFirestore.instance;
+      if (auth.currentUser != null) {
+        var userData = await db.collection("users").doc(auth.currentUser!.uid).get();
+        setState(() {
+          user = userData["user_type"] == 2 ? 2 : 1;
+        });
+      } else {
+        setState(() {
+          user = 0;
+        });
+      }
+
       var blogData = await db.collection("blogs").doc(widget.id).get();
       return setState(() {
         data = blogData;
@@ -48,7 +61,11 @@ class _BlogAdminState extends State<BlogAdmin> {
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
         title: Text(
-          widget.title,
+          loading 
+          ? "Loading..."
+          : isError
+          ? "Error"
+          : data["title"],
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -68,7 +85,8 @@ class _BlogAdminState extends State<BlogAdmin> {
           ),
         )
       ),
-      floatingActionButton: Column(
+      floatingActionButton: user == 1
+      ? Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
@@ -102,6 +120,7 @@ class _BlogAdminState extends State<BlogAdmin> {
           )
         ],
       )
+      : SizedBox()
     );
   }
 }

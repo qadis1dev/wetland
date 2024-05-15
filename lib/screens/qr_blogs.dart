@@ -71,7 +71,7 @@ class _QrBlogsState extends State<QrBlogs> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => BlogAdmin(id: blogs[index].id, title: blogs[index].data()["title"]),
+                    builder: (context) => Blog(id: blogs[index].id),
                   )
                 ).then((value) => getData());
               },
