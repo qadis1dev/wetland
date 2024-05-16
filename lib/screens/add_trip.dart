@@ -19,6 +19,7 @@ class _AddTripState extends State<AddTrip> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
+        barrierColor: Color(0xFF46932c),
         firstDate: DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
@@ -34,7 +35,7 @@ class _AddTripState extends State<AddTrip> {
       await db.collection("trips").add({
         "title": titleController.text,
         "body": bodyController.text,
-        "date": selectedDate,
+        "date": DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
         "has_timings": false
       });
       Navigator.of(context).pop();

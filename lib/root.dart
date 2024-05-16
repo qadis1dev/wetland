@@ -9,6 +9,7 @@ import 'package:app/screens/home.dart';
 import 'package:app/screens/profile_view.dart';
 import 'package:app/screens/qr_blogs.dart';
 import 'package:app/screens/qr_scanner.dart';
+import 'package:app/screens/report_panel.dart';
 import 'package:app/screens/trips.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -143,6 +144,13 @@ class _RootState extends State<Root> {
             : data["user_type"] == 0 || data["user_type"] == 1
             ? ListTile(
               title: Text("Report"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ReportPanel(),
+                  )
+                );
+              },
             )
             : SizedBox(),
             loading
