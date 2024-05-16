@@ -17,13 +17,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF46923c),
-        title: Text("Terms and Condition"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Arrow icon
-          onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous page
-          },
-        ),
+        title: Text("Terms and Condition", style: TextStyle(color: Colors.white),),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables
 
+import 'package:app/screens/about_us.dart';
 import 'package:app/screens/booked_trips.dart';
+import 'package:app/screens/contact_us.dart';
+import 'package:app/screens/faq.dart';
 import 'package:app/screens/feedbacks.dart';
 import 'package:app/screens/home.dart';
 import 'package:app/screens/profile_view.dart';
@@ -160,10 +163,34 @@ class _RootState extends State<Root> {
             : SizedBox(),
             ListTile(
               title: Text("FAQ"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => FAQ(),
+                  )
+                );
+              },
             ),
             ListTile(
               title: Text("About us"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AboutUs(),
+                  )
+                );
+              },
             ),
+            ListTile(
+              title: Text("Contact us"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ContactUs(),
+                  )
+                );
+              },
+            )
           ],
         ),
       )
