@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables
 
 import 'package:app/screens/about_us.dart';
+import 'package:app/screens/approve_images.dart';
 import 'package:app/screens/booked_trips.dart';
 import 'package:app/screens/contact_us.dart';
 import 'package:app/screens/faq.dart';
@@ -148,6 +149,22 @@ class _RootState extends State<Root> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ReportPanel(),
+                  )
+                );
+              },
+            )
+            : SizedBox(),
+            loading
+            ? Text("Loading...")
+            : !logged
+            ? SizedBox()
+            : data["user_type"] == 0 || data["user_type"] == 1
+            ? ListTile(
+              title: Text("Approve user images"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ApproveImages(),
                   )
                 );
               },

@@ -1,4 +1,6 @@
 import 'package:app/screens/edit_event.dart';
+import 'package:app/screens/submit_image_event.dart';
+import 'package:app/screens/view_user_images.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class _EventState extends State<Event> {
   dynamic data;
   dynamic user;
   dynamic images;
+  dynamic userImages;
 
   getData() async {
     try {
@@ -38,9 +41,11 @@ class _EventState extends State<Event> {
 
       var eventData = await db.collection("events").doc(widget.id).get();
       var eventImages = await db.collection("events").doc(widget.id).collection("images").get();
+      var userEventImages = await db.collection("events").doc(widget.id).collection("user_images").get();
       return setState(() {
         data = eventData;
         images = eventImages.docs;
+        userImages = userEventImages.docs;
         loading = false;
       });
     } catch (e) {
@@ -60,6 +65,8 @@ class _EventState extends State<Event> {
 
   @override
   Widget build(BuildContext context) {
+    double widthSize = MediaQuery.of(context).size.width;
+    double heightSize = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
@@ -111,7 +118,81 @@ class _EventState extends State<Event> {
                 textAlign: TextAlign.start,
               ),
             ),
-
+            Divider(thickness: 1.5,),
+            user == 1
+            ? SizedBox()
+            : SizedBox(height: 10,),
+            user == 1
+            ? SizedBox()
+            : Container(
+              width: widthSize * 0.9,
+              height: heightSize * 0.065,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF46932c)),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SubmitImageEvent(id: widget.id, parentTitle: widget.title,),
+                    )
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Color(0xFF46932c),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)
+                  )
+                ),
+                child: Text(
+                  "Submit an image",
+                  style: TextStyle(
+                    color: Color(0xFF46932c),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: userImages.length == 0 ? 0 : 20,
+            ),
+            userImages.length == 0
+            ? SizedBox()
+            : Container(
+              width: widthSize * 0.9,
+              height: heightSize * 0.065,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF46932c)),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ViewUserImages(images: userImages, collection: "events", parentId: widget.id, parentTitle: widget.title),
+                    )
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Color(0xFF46932c),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)
+                  )
+                ),
+                child: Text(
+                  "View user images",
+                  style: TextStyle(
+                    color: Color(0xFF46932c),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20
+                  ),
+                ),
+              ),
+            ),
           ],
         )
       ),
