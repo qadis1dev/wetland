@@ -1,6 +1,4 @@
 import 'package:app/screens/edit_bird.dart';
-import 'package:app/screens/submit_image_bird.dart';
-import 'package:app/screens/view_user_images.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -118,80 +116,6 @@ class _BirdState extends State<Bird> {
               ),
             ),
             Divider(thickness: 1.5,),
-            user == 1
-            ? SizedBox()
-            : SizedBox(height: 10,),
-            user == 1
-            ? SizedBox()
-            : Container(
-              width: widthSize * 0.9,
-              height: heightSize * 0.065,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF46932c)),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SubmitImageBird(id: widget.id, parentTitle: widget.title,),
-                    )
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Color(0xFF46932c),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)
-                  )
-                ),
-                child: Text(
-                  "Submit an image",
-                  style: TextStyle(
-                    color: Color(0xFF46932c),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: userImages.length == 0 ? 0 : 20,
-            ),
-            userImages.length == 0
-            ? SizedBox()
-            : Container(
-              width: widthSize * 0.9,
-              height: heightSize * 0.065,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF46932c)),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ViewUserImages(images: userImages, collection: "birds", parentId: widget.id, parentTitle: widget.title),
-                    )
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Color(0xFF46932c),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)
-                  )
-                ),
-                child: Text(
-                  "View user images",
-                  style: TextStyle(
-                    color: Color(0xFF46932c),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  ),
-                ),
-              ),
-            ),
           ],
         )
       ),

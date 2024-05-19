@@ -11,10 +11,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
 
 class SubmitImageBird extends StatefulWidget {
-  const SubmitImageBird({super.key, required this.id, required this.parentTitle});
+  const SubmitImageBird({super.key});
 
-  final String id;
-  final String parentTitle;
   @override
   State<SubmitImageBird> createState() => _SubmitImageBirdState();
 }
@@ -55,7 +53,7 @@ class _SubmitImageBirdState extends State<SubmitImageBird> {
     final auth = FirebaseAuth.instance;
     if (_image == null) return;
     final filename = path.basename(_image!.path);
-    final destination = '${widget.id}/';
+    const destination = 'user_images/';
     final filenameFinal = "${DateTime.timestamp().millisecondsSinceEpoch}_$filename";
 
     try {
@@ -65,14 +63,11 @@ class _SubmitImageBirdState extends State<SubmitImageBird> {
         .child(filenameFinal);
       await ref.putFile(File(_image!.path));
       final url = await ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection("images_for_approval").doc(widget.id).set({
+      await FirebaseFirestore.instance.collection("images_for_approval").add({
         "filenameFinal": filenameFinal,
         "url": url,
         "user_id": auth.currentUser!.uid,
         "full_name": user["full_name"],
-        "collection": "birds",
-        "doc_id": widget.id,
-        "title": widget.parentTitle
       });
       Navigator.of(context).pop();
       return ScaffoldMessenger.of(context).showSnackBar(
