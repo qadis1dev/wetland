@@ -40,7 +40,7 @@ class _WetLandState extends State<WetLand> {
       }
 
       var wetlandData = await db.collection("wetlands").doc(widget.id).get();
-      var wetlandImages = await db.collection("wetlands").doc(widget.id).collection("images").get();
+      var wetlandImages = await db.collection("wetlands").doc(widget.id).collection("images").get(); //get images sub or nested collection
       var userWetlandImages = await db.collection("wetlands").doc(widget.id).collection("user_images").get();
       return setState(() {
         data = wetlandData;

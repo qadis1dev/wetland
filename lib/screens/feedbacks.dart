@@ -19,18 +19,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
   getData() async {
     try {
-      final auth = FirebaseAuth.instance;
       final db = FirebaseFirestore.instance;
-      if (auth.currentUser != null) {
-        var userData = await db.collection("users").doc(auth.currentUser!.uid).get();
-        setState(() {
-          user = userData["user_type"] == 2 ? 2 : 1;
-        });
-      } else {
-        setState(() {
-          user = 0;
-        });
-      }
 
       var feedbacksData = await db.collection("feedbacks").get();
       return setState(() {

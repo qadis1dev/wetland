@@ -268,6 +268,7 @@ class _ReportPanelState extends State<ReportPanel> {
     }
 
     try {
+      print(query.parameters);
       var docs = await query.get();
       Navigator.of(context).push(
         MaterialPageRoute(

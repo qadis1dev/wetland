@@ -30,7 +30,6 @@ class _LocalAuthState extends State<LocalAuth> {
     }
 
     var isSupport = await localAuth.isDeviceSupported();
-    print("is supported: $isSupport");
     if (!isSupport) {
       await auth.signOut();
       ScaffoldMessenger.of(context).showSnackBar(

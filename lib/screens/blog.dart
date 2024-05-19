@@ -85,7 +85,7 @@ class _BlogState extends State<Blog> {
           ),
         )
       ),
-      floatingActionButton: user == 1
+      floatingActionButton: user != 2
       ? Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

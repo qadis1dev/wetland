@@ -30,6 +30,7 @@ class _FeedBackState extends State<FeedBack> {
         "user_name": user["full_name"]
       });
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
       return Navigator.of(context).pop();
     } catch (e) {
       print(e);

@@ -28,7 +28,7 @@ class _FAQState extends State<FAQ> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
-        title: Text("About us", style: TextStyle(
+        title: Text("FAQ", style: TextStyle(
           color: Colors.white
         ),),
       ),

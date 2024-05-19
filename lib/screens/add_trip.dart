@@ -15,12 +15,13 @@ class _AddTripState extends State<AddTrip> {
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  DateTime timeNow = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         barrierColor: Color(0xFF46932c),
-        firstDate: DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
+        firstDate: DateTime(timeNow.year, timeNow.month, timeNow.day),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {

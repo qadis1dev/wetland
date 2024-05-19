@@ -102,7 +102,14 @@ class _BirdsState extends State<Birds> {
         )
       ),
       floatingActionButton: user == 2
-      ? SizedBox()
+      ? FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Color(0xFF46923c),
+        child: Icon(
+          Icons.camera,
+          color: Colors.white,
+        ),
+      )
       : user == 0
       ? SizedBox()
       : FloatingActionButton(

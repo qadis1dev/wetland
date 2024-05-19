@@ -227,14 +227,9 @@ class _BookTripState extends State<BookTrip> {
     try {
       final auth = FirebaseAuth.instance;
       final db = FirebaseFirestore.instance;
-      if (auth.currentUser == null) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Trip is fully booked"), backgroundColor: Color(0xFF46923c),)
-        );
-      }
       var timing = await db.collection("trips").doc(widget.id).collection("timings").doc(widget.timingId).get();
       var bookings = await db.collection("bookings").where("trip_id", isEqualTo: widget.id).where("timing_id", isEqualTo: widget.timingId).get();
-      if (bookings.docs.length == timing["slots"]) {
+      if (bookings.docs.length >= timing["slots"]) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Trip is fully booked"), backgroundColor: Color(0xFF46923c),)
         );
@@ -397,6 +392,8 @@ class _BookTripState extends State<BookTrip> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please enter your phone number";
+                    } else if (value.length < 8) {
+                      return "Phone number can not be less than 8 numbers";
                     } else {
                       return null;
                     }
@@ -520,7 +517,7 @@ class _BookTripState extends State<BookTrip> {
                 ),
               ),
               SizedBox(height: 20,),
-                              Container(
+              Container(
                 width: widthSize*0.9,
                 height: heightSize * 0.065,
                 decoration: BoxDecoration(

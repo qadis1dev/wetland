@@ -56,7 +56,7 @@ class _LoggedState extends State<Logged> {
           ),
           Center(
             child: Text(
-              data["user_type"] == 0 ? "Super Admin" : data["user_type"] == 1 ? "Admin" : data["account_type"] == "email" ? "Email user" : "Google user",
+              data["user_type"] == 0 ? "Admin" : data["user_type"] == 1 ? "Staff" : data["account_type"] == "email" ? "Email user" : "Google user",
               style: TextStyle(
                 fontSize: 16
               ),
