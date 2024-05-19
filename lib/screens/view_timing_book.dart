@@ -2,6 +2,7 @@
 
 import 'package:app/screens/book_trip.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ViewTimingBook extends StatefulWidget {
@@ -26,13 +27,17 @@ class _ViewTimingBookState extends State<ViewTimingBook> {
   bool loading = true;
   bool isError = false;
   dynamic bookings;
+  dynamic user;
   
   getData() async {
     try {
       final db = FirebaseFirestore.instance;
+      final auth = FirebaseAuth.instance;
+      var userData = await db.collection("users").doc(auth.currentUser!.uid).get();
       var bookings1 = await db.collection("bookings").where("trip_id", isEqualTo: widget.tripId).where("timing_id", isEqualTo: widget.timingId).get();
       return setState(() {
         bookings = bookings1.docs;
+        user = userData;
         loading = false;
       });
     } catch (e) {
@@ -152,6 +157,8 @@ class _ViewTimingBookState extends State<ViewTimingBook> {
             ),
             SizedBox(height: 20,),
             bookings.length == widget.timing["slots"]
+            ? SizedBox()
+            : user["user_type"] != 2
             ? SizedBox()
             : Container(
               width: widthSize * 0.9,

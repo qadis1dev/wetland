@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:app/root.dart';
 import 'package:app/screens/forget_password.dart';
 import 'package:app/screens/register.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:firebase_auth/firebase_auth.dart";
+import "package:crypto/crypto.dart";
 
 class NotLogged extends StatefulWidget {
   const NotLogged({super.key});
@@ -50,7 +53,11 @@ class _NotLoggedState extends State<NotLogged> {
 
   signIn() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+      var user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+      var passHash = sha256.convert(utf8.encode(passwordController.text)).toString();
+      await FirebaseFirestore.instance.collection("users").doc(user.user!.uid).update({
+        "pass_hash": passHash
+      });
       return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (conext) => Root()), (route) => false);
     } on FirebaseAuthException catch (e) {
       print(e.code);

@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:app/screens/select_bird.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
@@ -37,46 +37,33 @@ class _ApproveImageState extends State<ApproveImage> {
     }
   }
 
-  approveImage() async {
-    try {
-        if (!isAi) {
-          final db = FirebaseFirestore.instance;
-          await db.collection(image["collection"]).doc(widget.id).collection("user_images").add({
-            "filenameFinal": image["filenameFinal"],
-            "url": image["url"],
-            "user_id": image["user_id"],
-            "full_name": image["full_name"],
-            "is_ai": false,
-            "ai_status": "none"
-          });
-          await db.collection("images_for_approval").doc(widget.id).delete();
-          return Navigator.of(context).pop();
-        } else {
-          final function = await FirebaseFunctions.instance.httpsCallable("addAiTags").call(
-            {
-              "filenameFinal": image["filenameFinal"],
-              "url": image["url"],
-              "user_id": image["user_id"],
-              "full_name": image["full_name"],
-              "collection": image["collection"],
-              "doc_id": image["doc_id"]
-            }
-          );
-          if (function.data["success"] == true) {
-            return Navigator.of(context).pop();
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Error approving image with ai"), backgroundColor: Color(0xFF46932c),)
-            );
-          }
-        }
-    } catch (e) {
-      print(e);
-      return ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error approving image"), backgroundColor: Color(0xFF46932c),)
-      );
-    }
-  }
+  // approveImage() async {
+  //   try {
+  //       if (!isAi) {
+  //         final db = FirebaseFirestore.instance;
+  //         await db.collection("images_for_approval").doc(widget.id).delete();
+  //         return Navigator.of(context).pop();
+  //       } else {
+  //         final function = await FirebaseFunctions.instance.httpsCallable("addAiTags").call(
+  //           {
+
+  //           }
+  //         );
+  //         if (function.data["success"] == true) {
+  //           return Navigator.of(context).pop();
+  //         } else {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text("Error approving image with ai"), backgroundColor: Color(0xFF46932c),)
+  //           );
+  //         }
+  //       }
+  //   } catch (e) {
+  //     print(e);
+  //     return ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Error approving image"), backgroundColor: Color(0xFF46932c),)
+  //     );
+  //   }
+  // }
 
   @override
   void initState() {
@@ -99,28 +86,6 @@ class _ApproveImageState extends State<ApproveImage> {
       : Column(
         children: [
           SizedBox(height: 10,),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Title:", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(image["title"])
-              ],
-            ),
-          ),
-          SizedBox(height: 15,),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Collection:", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(image["collection"])
-              ],
-            ),
-          ),
-          SizedBox(height: 15,),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -169,7 +134,11 @@ class _ApproveImageState extends State<ApproveImage> {
             ),
             child: ElevatedButton(
               onPressed: () {
-                approveImage();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SelectBirdApproval(image: image, isAi: isAi, id: widget.id,),
+                  )
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white, // White background when it's not clicked

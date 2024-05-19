@@ -1,4 +1,4 @@
-import 'package:app/screens/approved_image.dart';
+import 'package:app/screens/approve_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +61,6 @@ class _ApproveImagesState extends State<ApproveImages> {
               ).then((value) => getData());
             },
             title: Text(images[index].data()["full_name"]),
-            subtitle: Text("${images[index].data()["collection"]} - ${images[index].data()["title"]}"),
           );
         },
         separatorBuilder: (context, index) {

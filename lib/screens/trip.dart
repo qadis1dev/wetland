@@ -17,7 +17,7 @@ class _TripState extends State<Trip> {
   bool loading = true;
   bool isError = false;
   dynamic data;
-  dynamic user;
+  dynamic user = 0;
 
   getData() async {
     try {
@@ -95,10 +95,10 @@ class _TripState extends State<Trip> {
                 ],
               ),
             ),
-            user != 2
+            user == 0
             ? SizedBox()
             : SizedBox(height: 20,),
-            user != 2
+            user == 0
             ? SizedBox()
             : Container(
                   width: widthSize * 0.9,

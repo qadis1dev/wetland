@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import "dart:convert";
+
 import "package:app/root.dart";
 import "package:app/screens/terms_and_confitions.dart";
+import "package:crypto/crypto.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -30,12 +33,14 @@ class _RegisterState extends State<Register> {
         password: passwordController.text,
       );
       final db = FirebaseFirestore.instance;
-      await db.collection("users").doc(creds.user?.uid).set({
+      var passHash = sha256.convert(utf8.encode(passwordController.text)).toString();
+      await db.collection("users").doc(creds.user!.uid).set({
         "uid": creds.user?.uid,
         "email": emailController.text,
         "full_name": nameController.text,
         "user_type": 2,
-        "account_type": "email"
+        "account_type": "email",
+        "pass_hash": passHash
       });
       return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Root()), (route) => false);
     } on FirebaseAuthException catch (e) {

@@ -3,6 +3,7 @@
 import 'package:app/root.dart';
 import 'package:app/screens/add_admin.dart';
 import 'package:app/screens/change_name.dart';
+import 'package:app/screens/change_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,11 @@ class _LoggedState extends State<Logged> {
                 thickness: 1.5,
               ),
               ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ChangePassword(),)
+                  );
+                },
                 title: Text("Change password"),
               ),
               Divider(
