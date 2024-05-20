@@ -94,10 +94,18 @@ class _ViewUserImageState extends State<ViewUserImage> {
               heroAnimationTag: "tag",
               zoomWidget: Image.network(widget.image["url"]),
             ),
-            SizedBox(height: 20,),
-            Center(child: Text("Ai description", style: TextStyle(fontWeight: FontWeight.bold),),),
-            SizedBox(height: 10,),
-            Center(child: Text(widget.image["ai_bio"]),),
+            widget.image["is_ai"]
+            ? SizedBox(height: 20,)
+            : SizedBox(),
+            widget.image["is_ai"]
+            ? Center(child: Text("Ai description", style: TextStyle(fontWeight: FontWeight.bold),),)
+            : SizedBox(),
+            widget.image["is_ai"]
+            ? SizedBox(height: 10,)
+            : SizedBox(),
+            widget.image["is_ai"]
+            ? Center(child: Text(widget.image["ai_bio"]),)
+            : SizedBox(),
             user["user_type"] == 2
             ? SizedBox()
             : Divider(thickness: 2,),

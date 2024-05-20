@@ -127,10 +127,17 @@ class _BirdState extends State<Bird> {
             : SizedBox(
               height: 200,
               child: userImages.length == 1
-              ? WidgetZoom(
-                heroAnimationTag: "tag",
-                zoomWidget: Image.network(userImages[0].data()["url"]),
-              )
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Image.network(userImages[0].data()["url"]),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => ViewUserImage(image: userImages[0].data(), imageId: userImages[0].id, birdId: widget.id,),)
+                      );
+                    },
+                  ),
+                )
               : ListView.builder(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 scrollDirection: Axis.horizontal,
