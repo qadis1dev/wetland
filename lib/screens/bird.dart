@@ -109,11 +109,18 @@ class _BirdState extends State<Bird> {
             : Divider(
               thickness: 2,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                data["body"]
+            Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: const [Color(0xFF46932c), Color(0xFF71E04B)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight
+                ),
+                borderRadius: BorderRadius.circular(20)
               ),
+              child: Text(data["body"], style: TextStyle(color: Colors.white),),
             ),
             Divider(thickness: 1.5,),
           ],

@@ -76,31 +76,33 @@ class _BirdsState extends State<Birds> {
       ? Center(
         child: Text("No birds added yet"),
       )
-      : SingleChildScrollView(
-        child: ListView.separated(
-          itemCount: birds.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Bird(id: birds[index].id, title: birds[index].data()["title"]),
-                  )
+      : ListView.builder(
+        itemCount: birds.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Container(
+          margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: (index + 1).isEven ? const [Color(0xFF46932c), Color(0xFF71E04B)]: const [Color(0xFF71E04B), Color(0xFF46932c)]
+            ),
+            borderRadius: BorderRadius.circular(20)
+          ),
+          child: ListTile(
+            title: Text(birds[index].data()["title"]),
+            trailing: Icon(Icons.arrow_forward_ios),
+            textColor: Colors.white,
+            iconColor: Colors.white,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Bird(id: birds[index].id, title: birds[index].data()["title"]),
                 )
-                .then((value) => getData());
-              },
-              title: Text(
-                birds[index].data()["title"]
-              ),
-            );
-          },
-          separatorBuilder:(context, index) {
-            return Divider(
-              thickness: 1.5,
-            );
-          },
-        )
+              ).then((value) => getData());
+            },
+          ),
+        );
+        },
       ),
       floatingActionButton: user == 2
       ? FloatingActionButton(
