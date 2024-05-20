@@ -113,6 +113,7 @@ class _LoggedState extends State<Logged> {
           : SizedBox(),
           ListTile(
             onTap: () async {
+              await FirebaseFirestore.instance.collection("tokens").doc(FirebaseAuth.instance.currentUser!.uid).delete();
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => Root()),

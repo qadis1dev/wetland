@@ -1,4 +1,5 @@
 import 'package:app/screens/edit_bird.dart';
+import 'package:app/screens/view_user_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,8 +64,6 @@ class _BirdState extends State<Bird> {
 
   @override
   Widget build(BuildContext context) {
-    double widthSize = MediaQuery.of(context).size.width;
-    double heightSize = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF46932c),
@@ -123,6 +122,34 @@ class _BirdState extends State<Bird> {
               child: Text(data["body"], style: TextStyle(color: Colors.white),),
             ),
             Divider(thickness: 1.5,),
+            userImages.length == 0
+            ? SizedBox()
+            : SizedBox(
+              height: 200,
+              child: userImages.length == 1
+              ? WidgetZoom(
+                heroAnimationTag: "tag",
+                zoomWidget: Image.network(userImages[0].data()["url"]),
+              )
+              : ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                scrollDirection: Axis.horizontal,
+                itemCount: userImages.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      child: Image.network(userImages[index].data()["url"]),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ViewUserImage(image: userImages[index].data(), imageId: userImages[index].id, birdId: widget.id,),)
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         )
       ),

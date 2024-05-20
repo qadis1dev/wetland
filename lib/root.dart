@@ -70,7 +70,7 @@ class _RootState extends State<Root> {
     await messaging.requestPermission();
     if (await Permission.notification.isGranted) {
       final token = await messaging.getToken();
-      await db.collection("tokens").add({
+      await db.collection("tokens").doc(userData["id"]).set({
         "token": token,
         "type": userData["user_type"] == 2 ? "user" : "admin"
       });
