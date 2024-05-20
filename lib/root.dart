@@ -75,7 +75,18 @@ class _RootState extends State<Root> {
         "token": token,
         "type": userData["user_type"] == 2 ? "user" : "admin"
       });
+      messageListener();
     }
+  }
+
+  messageListener() async {
+    FirebaseMessaging.onMessage.listen((event) {
+      if (event.notification != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(event.notification!.title!, style: TextStyle(color: Colors.white)), backgroundColor: Color(0xFF46932c),)
+        );
+      }
+    });
   }
 
   @override
