@@ -11,7 +11,6 @@ import 'package:app/screens/profile_view.dart';
 import 'package:app/screens/qr_blogs.dart';
 import 'package:app/screens/qr_scanner.dart';
 import 'package:app/screens/report_panel.dart';
-import 'package:app/screens/search.dart';
 import 'package:app/screens/trips.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -156,16 +155,6 @@ class _RootState extends State<Root> {
               },
             )
             : SizedBox(),
-            ListTile(
-              title: Text("Search by voice"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Search(),
-                  )
-                );
-              },
-            ),
             loading
             ? Text("Loading...")
             : !logged
