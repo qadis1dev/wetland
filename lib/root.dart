@@ -15,7 +15,9 @@ import 'package:app/screens/search.dart';
 import 'package:app/screens/trips.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Root extends StatefulWidget {
   const Root({super.key});
@@ -57,10 +59,30 @@ class _RootState extends State<Root> {
     }
   }
 
+  initNotifications() async {
+    final auth = FirebaseAuth.instance;
+    final db = FirebaseFirestore.instance;
+    final messaging = FirebaseMessaging.instance;
+    if (auth.currentUser == null) {
+      return;
+    }
+
+    final userData = await db.collection("users").doc(auth.currentUser!.uid).get();
+    await messaging.requestPermission();
+    if (await Permission.notification.isGranted) {
+      final token = await messaging.getToken();
+      await db.collection("tokens").add({
+        "token": token,
+        "type": userData["user_type"] == 2 ? "user" : "admin"
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getAuth();
+    initNotifications();
   }
 
   void _onItemTapped(int index) {
